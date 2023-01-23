@@ -29,7 +29,7 @@ data "terraform_remote_state" "db" {
 }
 
 data "template_file" "user_data" {
-  template = file("user-data.sh")
+  template = file("${path.module}/user-data.sh")
   vars = {
     server_port = var.server_port
     db_address = data.terraform_remote_state.db.outputs.address
@@ -101,13 +101,13 @@ resource "aws_autoscaling_group" "example" {
 
   tag {
     key = "Name"
-    value = "${var.custer_name}-asg-example"
+    value = "${var.cluster_name}-asg-example"
     propagate_at_launch = true
   }
 }
 
 resource "aws_lb" "example" {
-  name = "${var.custer_name}-asg-example"
+  name = "${var.cluster_name}-asg-example"
   load_balancer_type = "application"
   subnets = data.aws_subnet_ids.default.ids
 }
